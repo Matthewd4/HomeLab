@@ -1,5 +1,5 @@
 # IT-Helpdesk-Lab
-This is a home lab I created through a virtualization host. I built a windows domain and installed pfSense to practice networking and VPN basics. I installed osTicket to practice documentation and workflow of the ticketing system, and broke things on purpose such as the boot order and then fixed them to practice common troubleshooting scenarios. 
+This is my home lab I created through Oracle VirtualBox. It is where I've practiced, and continue to practice my networking, cybersecurity, deployment, troubleshooting, and group policy management. Feel free to look through the organized folders to see the work I have completed so far, or utilize the table of contents links down below!
 
 Table of Contents:  
 - [Active Directory Setup](Active%20Directory%20Setup/README.md)
