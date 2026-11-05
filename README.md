@@ -68,6 +68,35 @@ The results confirm the domain name, NetBIOS name, and Primary Domain Controller
 ![Active Directory Domain Verification](screenshots/Active-Directory-domain-verification.png)
 
 This exercise demonstrates the ability to inspect and validate Active Directory domain configuration using PowerShell.
+#### DNS Configuration and Troubleshooting
+
+Configured and verified DNS resolution for the `corp.example.test` Active Directory domain.
+
+During testing, I discovered that the domain controller was registering two IPv4 addresses:
+
+- `192.168.50.10` — Internal CorpLab network
+- `10.0.2.15` — VirtualBox NAT network
+
+**Troubleshooting steps performed:**
+
+1. Used `Resolve-DnsName` to identify duplicate DNS records.
+2. Inspected DNS registration settings using `Get-DnsClient`.
+3. Disabled DNS registration on the NAT network adapter.
+4. Removed unwanted NAT IP address records from DNS Manager.
+5. Verified DNS Server interface settings.
+6. Cleared the DNS client cache and retested name resolution.
+
+**Final verification:**
+
+```powershell
+Resolve-DnsName corp.example.test -Server 192.168.50.10 -Type A
+```
+
+The DNS query successfully returned only the intended internal IP address, `192.168.50.10`.
+
+![DNS Resolution Verification](screenshots/dns-resolution-verification.png)
+
+**Skills demonstrated:** DNS troubleshooting, PowerShell diagnostics, network adapter configuration, and Windows Server administration.
 
 ### 3. Organizational Unit Management
 #### Active Directory Organizational Unit Structure
