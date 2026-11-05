@@ -84,6 +84,16 @@ corp.example.test
 - Created the `HelpDesk-Tier1` global security group.
 - Added the employee account to the security group.
 - Verified group membership through Active Directory Users and Computers.
+  
+### Security Group Membership Verification
+
+Created the `HelpDesk-Tier1` global security group and assigned the sample employee account Alex Morgan as a member.
+
+Verified the group membership using Active Directory Users and Computers.
+
+This exercise demonstrates user access administration, security group management, and verification of account membership in an Active Directory environment.
+
+![HelpDesk-Tier1 Security Group Membership](screenshots/Assigning%20a%20member%20to%20a%20security%20group.png)
 
 ## Planned Help Desk Simulations
 
