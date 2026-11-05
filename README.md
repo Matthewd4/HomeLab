@@ -60,6 +60,13 @@ The internal network uses the `192.168.50.0/24` subnet, with the domain controll
 - Tested DNS resolution and diagnostics.
 
 ### 3. Organizational Unit Management
+### Active Directory Organizational Unit Structure
+
+The screenshot below demonstrates the organizational unit structure created within the `corp.example.test` domain.
+
+![Active Directory OU Structure](screenshots/Creating%20AD%20groups.png)
+
+The `Company` OU contains separate organizational units for users, computers, and security groups. This structure provides a foundation for centralized account administration and future Group Policy configuration.
 
 Created the following Active Directory structure:
 
