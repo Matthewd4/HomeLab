@@ -58,9 +58,19 @@ The internal network uses the `192.168.50.0/24` subnet, with the domain controll
 - Configured the DNS Server role.
 - Verified domain functionality using PowerShell.
 - Tested DNS resolution and diagnostics.
+  
+### Active Directory Domain Verification
+
+Verified the Active Directory domain configuration using the PowerShell `Get-ADDomain` command.
+
+The results confirm the domain name, NetBIOS name, and Primary Domain Controller (PDC Emulator).
+
+![Active Directory Domain Verification](screenshots/Active-Directory-domain-verification.png)
+
+This exercise demonstrates the ability to inspect and validate Active Directory domain configuration using PowerShell.
 
 ### 3. Organizational Unit Management
-### Active Directory Organizational Unit Structure
+#### Active Directory Organizational Unit Structure
 
 The screenshot below demonstrates the organizational unit structure created within the `corp.example.test` domain.
 
