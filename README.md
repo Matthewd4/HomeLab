@@ -2,6 +2,8 @@
 
 **Project Status:** In Progress
 
+**Project Portfolio:** [View the Windows Server Active Directory Home Lab on Google Sites](https://sites.google.com/view/matthewderick/home/projects/windows-server-ad-home-lab)
+
 ## Project Overview
 
 This project documents the deployment, configuration, and administration of a virtualized Windows Server 2025 Active Directory environment using Oracle VirtualBox.
