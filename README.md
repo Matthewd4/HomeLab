@@ -1,45 +1,61 @@
 # Windows Server 2025 Active Directory Home Lab
 
+**Project Status:** In Progress
+
 ## Project Overview
 
-This project documents the deployment and administration of a virtualized Windows Server 2025 environment designed to simulate common Help Desk and Systems Administration tasks.
+This project documents the deployment, configuration, and administration of a virtualized Windows Server 2025 Active Directory environment using Oracle VirtualBox.
 
-The goal is to develop practical experience with Windows Server, Active Directory Domain Services (AD DS), DNS, networking, user account management, and troubleshooting.
+The lab simulates a small-business IT infrastructure and provides hands-on experience with common Help Desk, IT Support, and Systems Administration responsibilities.
 
-**Project Status:** In Progress
+The primary objectives include Active Directory administration, Windows client management, DNS configuration, user authentication, network troubleshooting, and technical documentation.
 
 ## Technologies Used
 
 - Oracle VirtualBox
 - Windows Server 2025
+- Windows 11 Pro (Virtual Client)
+- Windows 11 (Host Operating System)
 - Active Directory Domain Services (AD DS)
 - Windows DNS Server
 - Windows PowerShell
-- Windows 11 (host operating system)
+- Active Directory Users and Computers (ADUC)
+- TCP/IP Networking
 
 ## Lab Environment
 
 | Component | Configuration |
 |---|---|
 | Hypervisor | Oracle VirtualBox |
-| Server | SERVER01 |
-| Operating System | Windows Server 2025 |
+| Domain Controller | SERVER01 |
+| Server Operating System | Windows Server 2025 |
+| Client Workstation | CLIENT01 |
+| Client Operating System | Windows 11 Pro |
 | Active Directory Domain | corp.example.test |
 | NetBIOS Domain | CORP |
 | Internal Network | CorpLab |
-| Domain Controller IP | 192.168.50.10/24 |
+| Network Subnet | 192.168.50.0/24 |
+| Domain Controller IP | 192.168.50.10 |
+| Client Workstation IP | 192.168.50.20 |
+| DNS Server | SERVER01 (192.168.50.10) |
 | Server Memory | 6 GB |
-| Virtual CPUs | 2 |
-| Virtual Disk | 80 GB |
+| Server Virtual CPUs | 2 |
+| Server Virtual Disk | 80 GB |
 
-### Network Architecture
+## Network Architecture
 
-The server uses two virtual network adapters:
+The lab uses an isolated VirtualBox internal network named `CorpLab` to support communication between the domain controller and Windows 11 Pro workstation.
+
+**SERVER01** uses two virtual network adapters:
 
 - **Adapter 1 (NAT):** Provides internet connectivity.
-- **Adapter 2 (Internal Network):** Provides an isolated network for future domain-joined clients.
+- **Adapter 2 (Internal Network):** Provides communication with domain-connected devices.
 
-The internal network uses the `192.168.50.0/24` subnet, with the domain controller configured at `192.168.50.10`.
+**CLIENT01** uses the CorpLab internal network to communicate with SERVER01.
+
+The internal network uses the `192.168.50.0/24` subnet, with SERVER01 configured as the DNS server for CLIENT01.
+
+This configuration allows domain authentication and DNS communication to occur within an isolated virtual environment without modifying the physical home network.
 
 ## Completed Configuration
 
@@ -47,69 +63,74 @@ The internal network uses the `192.168.50.0/24` subnet, with the domain controll
 
 - Created and configured the SERVER01 virtual machine.
 - Installed Windows Server 2025.
-- Configured the server hostname.
+- Configured the server hostname and virtual hardware.
+- Configured network adapters for internal networking and internet connectivity.
+- Assigned a static IPv4 address to the internal network interface.
 - Verified network connectivity.
 
-### 2. Active Directory and DNS
+### 2. Active Directory Domain Deployment
 
-- Installed the Active Directory Domain Services role.
+- Installed Active Directory Domain Services (AD DS).
 - Created the `corp.example.test` forest and domain.
 - Promoted SERVER01 to a domain controller.
-- Configured the DNS Server role.
-- Verified domain functionality using PowerShell.
-- Tested DNS resolution and diagnostics.
-  
-### Active Directory Domain Verification
+- Configured the NetBIOS domain name `CORP`.
+- Installed and configured the DNS Server role.
+- Verified domain configuration using PowerShell.
 
-Verified the Active Directory domain configuration using the PowerShell `Get-ADDomain` command.
+#### Active Directory Domain Verification
 
-The results confirm the domain name, NetBIOS name, and Primary Domain Controller (PDC Emulator).
+Used the following PowerShell command to verify the domain configuration:
 
-![Active Directory Domain Verification](screenshots/Active-Directory-domain-verification.png)
+`Get-ADDomain | Select-Object DNSRoot, NetBIOSName, PDCEmulator`
 
-This exercise demonstrates the ability to inspect and validate Active Directory domain configuration using PowerShell.
-#### DNS Configuration and Troubleshooting
+**Verified results:**
 
-Configured and verified DNS resolution for the `corp.example.test` Active Directory domain.
+- DNS Domain: `corp.example.test`
+- NetBIOS Name: `CORP`
+- PDC Emulator: `SERVER01.corp.example.test`
 
-During testing, I discovered that the domain controller was registering two IPv4 addresses:
+This exercise demonstrated the ability to inspect and verify Active Directory domain configuration using PowerShell.
+
+[View Active Directory Domain Verification Screenshot](screenshots/Active-Directory-domain-verification.png)
+
+### 3. DNS Configuration and Troubleshooting
+
+Configured DNS services to support Active Directory name resolution and domain authentication.
+
+During verification, I discovered that the domain controller was registering two IPv4 addresses:
 
 - `192.168.50.10` — Internal CorpLab network
 - `10.0.2.15` — VirtualBox NAT network
 
-**Troubleshooting steps performed:**
+The unwanted NAT address could cause domain-connected clients to resolve the domain controller to an unreachable address.
 
-1. Used `Resolve-DnsName` to identify duplicate DNS records.
-2. Inspected DNS registration settings using `Get-DnsClient`.
-3. Disabled DNS registration on the NAT network adapter.
-4. Removed unwanted NAT IP address records from DNS Manager.
-5. Verified DNS Server interface settings.
-6. Cleared the DNS client cache and retested name resolution.
+**Troubleshooting steps:**
 
-**Final verification:**
+1. Used PowerShell DNS queries to identify duplicate records.
+2. Inspected network adapter DNS registration settings.
+3. Disabled unwanted DNS registration on the NAT adapter.
+4. Removed incorrect DNS records using DNS Manager.
+5. Verified DNS Server configuration.
+6. Cleared the DNS client cache.
+7. Retested DNS resolution using PowerShell.
 
-```powershell
-Resolve-DnsName corp.example.test -Server 192.168.50.10 -Type A
+**Verification command:**
+
+`Resolve-DnsName corp.example.test -Server 192.168.50.10 -Type A`
+
+**Result:** The domain successfully resolved to the correct internal IP address, `192.168.50.10`.
+
+This exercise demonstrated practical DNS troubleshooting, network adapter configuration, and systematic problem resolution.
+
+[View DNS Resolution Verification Screenshot](screenshots/dns-resolution-verification.png)
+
+### 4. Active Directory Organizational Unit Management
+
+Created an organizational unit structure to simulate centralized administration within a small-business environment.
+
+**Organizational Unit Structure:**
+
 ```
-
-The DNS query successfully returned only the intended internal IP address, `192.168.50.10`.
-
-![DNS Resolution Verification](screenshots/dns-resolution-verification.png)
-
-**Skills demonstrated:** DNS troubleshooting, PowerShell diagnostics, network adapter configuration, and Windows Server administration.
-
-### 3. Organizational Unit Management
-#### Active Directory Organizational Unit Structure
-
-The screenshot below demonstrates the organizational unit structure created within the `corp.example.test` domain.
-
-![Active Directory OU Structure](screenshots/Creating%20AD%20groups.png)
-
-The `Company` OU contains separate organizational units for users, computers, and security groups. This structure provides a foundation for centralized account administration and future Group Policy configuration.
-
-Created the following Active Directory structure:
-
-```text
 corp.example.test
 └── Company
     ├── Users
@@ -117,45 +138,137 @@ corp.example.test
     └── Security Groups
 ```
 
-### 4. User and Security Group Management
+This structure separates user accounts, computer accounts, and security groups to support organized administration and future Group Policy configuration.
 
-- Created a sample employee account: Alex Morgan (`amorgan`).
+[View Active Directory OU Structure Screenshot](screenshots/Creating%20AD%20groups.png)
+
+### 5. User and Security Group Management
+
+Created sample employee accounts and security groups to practice identity and access administration.
+
+**Completed tasks:**
+
+- Created an employee account for Alex Morgan (`amorgan`).
 - Created the `HelpDesk-Tier1` global security group.
-- Added the employee account to the security group.
-- Verified group membership through Active Directory Users and Computers.
-  
-### Security Group Membership Verification
+- Added Alex Morgan to the security group.
+- Verified group membership using Active Directory Users and Computers.
 
-Created the `HelpDesk-Tier1` global security group and assigned the sample employee account Alex Morgan as a member.
+This exercise demonstrated user provisioning, security group administration, and membership verification.
 
-Verified the group membership using Active Directory Users and Computers.
+[View Security Group Membership Screenshot](screenshots/Assigning%20a%20member%20to%20a%20security%20group.png)
 
-This exercise demonstrates user access administration, security group management, and verification of account membership in an Active Directory environment.
+### 6. Windows 11 Pro Client Deployment
 
-![HelpDesk-Tier1 Security Group Membership](screenshots/Assigning%20a%20member%20to%20a%20security%20group.png)
+Deployed a Windows 11 Pro virtual workstation to simulate an employee computer within the organization.
+
+**Completed tasks:**
+
+- Created the CLIENT01 virtual machine in Oracle VirtualBox.
+- Installed Windows 11 Pro.
+- Configured the workstation's virtual hardware.
+- Connected CLIENT01 to the CorpLab internal network.
+- Assigned the static IPv4 address `192.168.50.20/24`.
+- Configured `192.168.50.10` as the preferred DNS server.
+- Verified communication with the domain controller.
+
+This configuration prepared the workstation for Active Directory domain integration.
+
+### 7. Windows 11 Pro Domain Join
+
+Successfully joined CLIENT01 to the `corp.example.test` Active Directory domain.
+
+**Completed tasks:**
+
+- Configured CLIENT01 to use SERVER01 for DNS resolution.
+- Verified domain controller connectivity.
+- Joined the workstation to the Active Directory domain.
+- Restarted the workstation to apply domain membership.
+- Verified that Windows recognized the domain membership.
+- Confirmed that the computer account appeared in Active Directory.
+
+This exercise demonstrated practical Windows client deployment and domain integration.
+
+### 8. Active Directory Computer Account Management
+
+Used Active Directory Users and Computers (ADUC) to manage the domain-joined workstation.
+
+**Completed tasks:**
+
+- Located CLIENT01 in the default Computers container.
+- Moved the computer account into `Company → Computers`.
+- Verified the workstation appeared in the correct organizational unit.
+- Updated computer account properties to document the workstation's purpose.
+
+This exercise demonstrated computer account administration, organizational unit management, and directory organization.
+
+### 9. Active Directory Domain User Authentication
+
+Verified successful Active Directory authentication using the domain-joined Windows 11 Pro workstation.
+
+Signed in to CLIENT01 using the sample employee account Alex Morgan.
+
+Executed the PowerShell command:
+
+`whoami`
+
+**Verified output:**
+
+`corp\amorgan`
+
+The result confirmed that the Windows session was running under the Active Directory domain account rather than a local Windows account.
+
+This exercise demonstrated successful domain user authentication and identity verification.
 
 ## Planned Help Desk Simulations
 
-- [ ] Password reset and account recovery
-- [ ] Account lockout troubleshooting
-- [ ] Windows client domain join
-- [ ] Group Policy configuration
-- [ ] Shared folder permissions
-- [ ] Additional DNS and connectivity troubleshooting
+The following exercises will expand the lab to include additional real-world IT support responsibilities:
+
+- [ ] Active Directory password resets
+- [ ] User account unlock and lockout troubleshooting
+- [ ] Group Policy creation and deployment
+- [ ] Shared folder and NTFS permissions
+- [ ] User account lifecycle management
+- [ ] Additional Windows client troubleshooting
+- [ ] Advanced DNS and network connectivity diagnostics
 
 ## Skills Demonstrated
 
+**Windows Server Administration**
 - Windows Server installation and configuration
-- Active Directory administration
+- Active Directory Domain Services deployment
+- Domain controller administration
 - DNS configuration and troubleshooting
-- Virtual networking
-- User provisioning
+
+**Active Directory Administration**
+- Organizational unit management
+- User account provisioning
 - Security group management
-- PowerShell-based verification
-- Technical documentation
+- Computer account administration
+- Domain user authentication
+
+**Windows Client Support**
+- Windows 11 Pro deployment
+- Static IP and DNS configuration
+- Domain joining
+- Workstation management
+- Authentication verification
+
+**Networking and Troubleshooting**
+- VirtualBox NAT and internal networking
+- IPv4 addressing
+- DNS record management
+- Network connectivity testing
+- PowerShell-based diagnostics
+- Systematic troubleshooting
+
+**Documentation**
+- Technical configuration documentation
+- Screenshot-based verification
+- Troubleshooting documentation
+- Infrastructure documentation
 
 ## Project Purpose
 
-This lab is part of my professional development toward an entry-level IT Help Desk position, with long-term goals in Systems Administration and Cybersecurity.
+This home lab supports my professional development toward an entry-level IT Help Desk or IT Support position, with long-term career goals in Systems Administration and Cybersecurity.
 
-The environment will continue to expand as I complete additional administrative tasks, troubleshooting exercises, and security-focused projects.
+The environment will continue to expand as I complete additional administrative exercises, troubleshooting simulations, and security-focused projects.
