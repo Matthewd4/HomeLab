@@ -91,7 +91,13 @@ Used the following PowerShell command to verify the domain configuration:
 
 This exercise demonstrated the ability to inspect and verify Active Directory domain configuration using PowerShell.
 
-[View Active Directory Domain Verification Screenshot](screenshots/Active-Directory-domain-verification.png)
+#### Figure 1 — Active Directory Domain Verification
+
+![Active Directory domain verification](screenshots/Active-Directory-domain-verification.png)
+
+*PowerShell verification of the domain name, NetBIOS name, and PDC Emulator.*
+
+[View full-size screenshot](screenshots/Active-Directory-domain-verification.png)
 
 ### 3. DNS Configuration and Troubleshooting
 
@@ -122,7 +128,13 @@ The unwanted NAT address could cause domain-connected clients to resolve the dom
 
 This exercise demonstrated practical DNS troubleshooting, network adapter configuration, and systematic problem resolution.
 
-[View DNS Resolution Verification Screenshot](screenshots/dns-resolution-verification.png)
+#### Figure 2 — DNS Resolution Verification
+
+![DNS resolution verification](screenshots/dns-resolution-verification.png)
+
+*Confirmed that corp.example.test resolves to the internal domain controller address, 192.168.50.10, after correcting unwanted NAT adapter DNS registration.*
+
+[View full-size screenshot](screenshots/dns-resolution-verification.png)
 
 ### 4. Active Directory Organizational Unit Management
 
@@ -140,7 +152,13 @@ corp.example.test
 
 This structure separates user accounts, computer accounts, and security groups to support organized administration and future Group Policy configuration.
 
-[View Active Directory OU Structure Screenshot](screenshots/Creating%20AD%20groups.png)
+#### Figure 3 — Active Directory Organizational Unit Structure
+
+![Active Directory organizational unit structure](screenshots/Creating%20AD%20groups.png)
+
+*Organized the Company OU into Users, Computers, and Security Groups to support centralized administration.*
+
+[View full-size screenshot](screenshots/Creating%20AD%20groups.png)
 
 ### 5. User and Security Group Management
 
@@ -155,7 +173,13 @@ Created sample employee accounts and security groups to practice identity and ac
 
 This exercise demonstrated user provisioning, security group administration, and membership verification.
 
-[View Security Group Membership Screenshot](screenshots/Assigning%20a%20member%20to%20a%20security%20group.png)
+#### Figure 4 — Security Group Membership Verification
+
+![Security group membership verification](screenshots/Assigning%20a%20member%20to%20a%20security%20group.png)
+
+*Verified that the sample employee account is a member of the HelpDesk-Tier1 security group.*
+
+[View full-size screenshot](screenshots/Assigning%20a%20member%20to%20a%20security%20group.png)
 
 ### 6. Windows 11 Pro Client Deployment
 
@@ -173,6 +197,14 @@ Deployed a Windows 11 Pro virtual workstation to simulate an employee computer w
 
 This configuration prepared the workstation for Active Directory domain integration.
 
+#### Figure 5 — Windows 11 Pro Static IP Configuration
+
+![Windows 11 Pro Static IP Configuration](screenshots/CLIENT01-Static-IP-Configuration.png)
+
+*Configured CLIENT01 with the static IPv4 address 192.168.50.20/24 and preferred DNS server 192.168.50.10 to enable communication with the Active Directory domain controller.*
+
+[View full-size screenshot](screenshots/CLIENT01-Static-IP-Configuration.png)
+
 ### 7. Windows 11 Pro Domain Join
 
 Successfully joined CLIENT01 to the `corp.example.test` Active Directory domain.
@@ -188,6 +220,14 @@ Successfully joined CLIENT01 to the `corp.example.test` Active Directory domain.
 
 This exercise demonstrated practical Windows client deployment and domain integration.
 
+#### Figure 6 — Windows 11 Pro Domain Membership
+
+![Windows 11 Pro domain membership](screenshots/CLIENT01-ActiveDirectory-Domain-Membership.png)
+
+*Verified that CLIENT01 successfully joined the corp.example.test Active Directory domain.*
+
+[View full-size screenshot](screenshots/CLIENT01-ActiveDirectory-Domain-Membership.png)
+
 ### 8. Active Directory Computer Account Management
 
 Used Active Directory Users and Computers (ADUC) to manage the domain-joined workstation.
@@ -200,6 +240,14 @@ Used Active Directory Users and Computers (ADUC) to manage the domain-joined wor
 - Updated computer account properties to document the workstation's purpose.
 
 This exercise demonstrated computer account administration, organizational unit management, and directory organization.
+
+#### Figure 7 — Active Directory Computer Account Management
+
+![CLIENT01 computer account in Active Directory](screenshots/AD_Computer_OU_Organization.png)
+
+*Located the domain-joined CLIENT01 computer account within the Company → Computers organizational unit in Active Directory Users and Computers.*
+
+[View full-size screenshot](screenshots/AD_Computer_OU_Organization.png)
 
 ### 9. Active Directory Domain User Authentication
 
@@ -218,6 +266,14 @@ Executed the PowerShell command:
 The result confirmed that the Windows session was running under the Active Directory domain account rather than a local Windows account.
 
 This exercise demonstrated successful domain user authentication and identity verification.
+
+#### Figure 8 — Active Directory Domain User Authentication
+
+![PowerShell whoami domain account verification](screenshots/CLIENT01-Domain-User-Login.png)
+
+*Verified the signed-in domain user context on CLIENT01 with the PowerShell whoami command, which returned corp\amorgan.*
+
+[View full-size screenshot](screenshots/CLIENT01-Domain-User-Login.png)
 
 ## Planned Help Desk Simulations
 
@@ -272,3 +328,4 @@ The following exercises will expand the lab to include additional real-world IT 
 This home lab supports my professional development toward an entry-level IT Help Desk or IT Support position, with long-term career goals in Systems Administration and Cybersecurity.
 
 The environment will continue to expand as I complete additional administrative exercises, troubleshooting simulations, and security-focused projects.
+
